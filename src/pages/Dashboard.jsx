@@ -1,6 +1,14 @@
-import React, { useEffect } from "react";
-import { collection, getDocs, query, orderBy } from "firebase/firestore";
-import { db } from "../components/firebase";
+import React, { useEffect, useState } from "react";
+import {
+  collection,
+  getDocs,
+  query,
+  orderBy,
+  updateDoc,
+  deleteDoc,
+  doc,
+} from "firebase/firestore";
+import { auth, db } from "../components/firebase";
 import { useDispatch, useSelector } from "react-redux";
 import { setLoading, setItems, setError } from "../store/slices/bucketSlice";
 import { useNavigate } from "react-router-dom";
@@ -9,6 +17,7 @@ const Dashboard = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { items, loading } = useSelector((state) => state.bucket);
+  const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
     const fetchLostItems = async () => {
@@ -31,6 +40,48 @@ const Dashboard = () => {
 
     fetchLostItems();
   }, [dispatch]);
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      setCurrentUser(user || null);
+    });
+
+    return unsubscribe;
+  }, []);
+
+  const handleToggleFound = async (e, item) => {
+    e.stopPropagation();
+    try {
+      const nextFound = !item.found;
+      const itemRef = doc(db, "bucket", item.id);
+      await updateDoc(itemRef, {
+        found: nextFound,
+        foundAt: nextFound ? new Date() : null,
+      });
+
+      dispatch(
+        setItems(
+          items.map((it) =>
+            it.id === item.id ? { ...it, found: nextFound } : it,
+          ),
+        ),
+      );
+    } catch (error) {
+      console.error("Error toggling found status:", error);
+      dispatch(setError(error.message));
+    }
+  };
+
+  const handleDelete = async (e, itemId) => {
+    e.stopPropagation();
+    try {
+      await deleteDoc(doc(db, "bucket", itemId));
+      dispatch(setItems(items.filter((item) => item.id !== itemId)));
+    } catch (error) {
+      console.error("Error deleting item:", error);
+      dispatch(setError(error.message));
+    }
+  };
 
   if (loading) {
     return <div className="text-center mt-10">Loading lost items...</div>;
@@ -86,6 +137,27 @@ const Dashboard = () => {
                       View
                     </button>
                   </div>
+
+                  {item.found && (
+                    <div className="badge badge-success">Found</div>
+                  )}
+
+                  {currentUser?.uid === item.userId && (
+                    <div className="flex gap-2 pt-2">
+                      <button
+                        className="btn btn-outline btn-sm"
+                        onClick={(e) => handleToggleFound(e, item)}
+                      >
+                        {item.found ? "Mark as Unfound" : "Mark as Found"}
+                      </button>
+                      <button
+                        className="btn btn-error btn-sm"
+                        onClick={(e) => handleDelete(e, item.id)}
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
             );

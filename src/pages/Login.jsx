@@ -90,18 +90,6 @@ function Login() {
     setLoginObj({ ...loginObj, [updateType]: value });
   };
 
-  // useEffect(() => {
-  //   const unsubscribe = onAuthStateChanged(auth, (user) => {
-  //     if (user) {
-  //       navigate("/dashboard", { replace: true });
-  //     }
-
-  //     setLoading(false);
-  //   });
-
-  //   return () => unsubscribe();
-  // }, [navigate]);
-
   return (
     <div className="h-[90vh] bg-base-200 flex items-center">
       <div className="card mx-auto w-full max-w-5xl shadow-xl">

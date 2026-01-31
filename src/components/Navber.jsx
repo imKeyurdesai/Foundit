@@ -34,7 +34,7 @@ const Navber = () => {
   return (
     <div className="navbar bg-base-100 shadow-sm">
       <div className="flex-1">
-        <div className="flex gap-4">
+        <div className="flex gap-4 p-3">
           <img
             src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/Foundit-Logo.svg/330px-Foundit-Logo.svg.png?20230214074642"
             alt="logo"
@@ -97,7 +97,6 @@ const Navber = () => {
               Contact
             </NavLink>
           </ul>
-          
 
           <SearchPreview />
 

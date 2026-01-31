@@ -52,6 +52,7 @@ const Uploads = () => {
         imageName: image.name,
         imageType: image.type,
         userId: auth.currentUser.uid,
+        found: false,
         createdAt: serverTimestamp(),
       });
 
