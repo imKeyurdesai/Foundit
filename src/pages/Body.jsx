@@ -12,6 +12,7 @@ function Body() {
 
   return (
     <div>
+        <Navber/>
       <input
         type="checkbox"
         className="toggle theme-controller"
