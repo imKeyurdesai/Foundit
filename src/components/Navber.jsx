@@ -36,9 +36,10 @@ const Navber = () => {
       <div className="flex-1">
         <div className="flex gap-4 p-3">
           <img
+            onClick={() => navigate("/dashboard")}
             src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/Foundit-Logo.svg/330px-Foundit-Logo.svg.png?20230214074642"
             alt="logo"
-            className="w-28 h-full"
+            className="w-28 h-full cursor-pointer"
           />
           <label className="swap swap-rotate">
             <input

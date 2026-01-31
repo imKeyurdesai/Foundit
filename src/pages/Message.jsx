@@ -31,12 +31,10 @@ function Message() {
   const messagesEndRef = useRef(null);
   const [searchTerm, setSearchTerm] = useState("");
 
-  // Auto-scroll to bottom when new messages arrive
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  // Fetch all users (excluding current user)
   const fetchUsers = async (currentUserId) => {
     try {
       const usersCollection = collection(db, "Users");
@@ -57,7 +55,6 @@ function Message() {
     scrollToBottom();
   }, [messages]);
 
-  // Get current user
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -72,7 +69,6 @@ function Message() {
     return unsubscribe;
   }, [dispatch]);
 
-  // Subscribe to messages when user is selected
   useEffect(() => {
     if (!selectedUser || !currentUser) return;
 
@@ -98,7 +94,6 @@ function Message() {
         );
       dispatch(setMessages(messagesList));
 
-      // Mark messages as read
       messagesList.forEach(async (msg) => {
         if (msg.receiverId === currentUser.uid && !msg.read) {
           const msgRef = doc(db, "messages", msg.id);
@@ -110,7 +105,6 @@ function Message() {
     return unsubscribe;
   }, [selectedUser, currentUser, dispatch]);
 
-  // Send message
   const sendMessage = async (e) => {
     e.preventDefault();
     if (!messageText.trim() || !selectedUser) return;
@@ -166,14 +160,11 @@ function Message() {
 
   return (
     <div className="flex h-[90vh] bg-base-100">
-      {/* Users Sidebar */}
       <div className="w-80 border-r border-base-300 flex flex-col">
-        {/* Header */}
         <div className="p-4 border-b border-base-300">
           <h1 className="text-2xl font-bold text-primary">Messages</h1>
         </div>
 
-        {/* Search */}
         <div className="p-4 border-b border-base-300">
           <input
             type="text"
@@ -184,7 +175,6 @@ function Message() {
           />
         </div>
 
-        {/* Users List */}
         <div className="flex-1 overflow-y-auto">
           {filteredUsers.length === 0 ? (
             <div className="p-4 text-center text-gray-500">No users found</div>
@@ -220,11 +210,9 @@ function Message() {
         </div>
       </div>
 
-      {/* Chat Area */}
       <div className="flex-1 flex flex-col">
         {selectedUser ? (
           <>
-            {/* Chat Header */}
             <div className="p-4 border-b border-base-300 bg-base-200 flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="avatar placeholder">
@@ -247,7 +235,6 @@ function Message() {
               </button>
             </div>
 
-            {/* Messages Container */}
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
               {messages.length === 0 ? (
                 <div className="flex items-center justify-center h-full">
@@ -288,7 +275,6 @@ function Message() {
               <div ref={messagesEndRef} />
             </div>
 
-            {/* Input Area */}
             <div className="p-4 border-t border-base-300 bg-base-100">
               <form onSubmit={sendMessage} className="flex gap-2">
                 <input

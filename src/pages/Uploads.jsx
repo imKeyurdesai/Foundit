@@ -36,13 +36,10 @@ const Uploads = () => {
     try {
       setLoading(true);
 
-      // 🔑 predictable document ID (like Register page)
       const itemId = `${auth.currentUser.uid}_${Date.now()}`;
 
-      // 🧪 convert image to base64
       const imageBase64 = await fileToBase64(image);
 
-      // 💾 save data to Firestore (bucket collection)
       await setDoc(doc(db, "bucket", itemId), {
         id: itemId,
         title,
@@ -56,7 +53,6 @@ const Uploads = () => {
         createdAt: serverTimestamp(),
       });
 
-      // reset form
       setTitle("");
       setLocation("");
       setCategory("");
@@ -66,7 +62,6 @@ const Uploads = () => {
       Navigate("/dashboard");
     } catch (error) {
       console.error("Upload error:", error);
-      setError(`Failed to upload item:`);
     } finally {
       setLoading(false);
     }

@@ -12,6 +12,7 @@ import { auth, db } from "../components/firebase";
 import { useDispatch, useSelector } from "react-redux";
 import { setLoading, setItems, setError } from "../store/slices/bucketSlice";
 import { useNavigate } from "react-router-dom";
+import { Icon } from "@iconify/react";
 
 const Dashboard = () => {
   const dispatch = useDispatch();
@@ -84,11 +85,15 @@ const Dashboard = () => {
   };
 
   if (loading) {
-    return <div className="text-center mt-10">Loading lost items...</div>;
+    return (
+      <div className="p-2 max-w-7xl mx-auto ">
+        <Icon icon="line-md:loading-loop" className="text-9xl mx-auto " />
+      </div>
+    );
   }
 
   return (
-    <div className="p-2 max-w-7xl mx-auto">
+    <div className="p-2 max-w-7xl mx-auto ">
       <h1 className="text-3xl font-bold mb-8">📢 Lost Items</h1>
 
       {items.length === 0 ? (
@@ -105,7 +110,6 @@ const Dashboard = () => {
                 className="card bg-base-100 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer hover:scale-105"
                 onClick={() => navigate(`/item/${item.id}`)}
               >
-                {/* Image */}
                 <figure className="relative h-60 w-auto bg-yellow-300 overflow-hidden rounded-t-lg object-cover">
                   <img
                     src={imgSrc}
@@ -114,7 +118,6 @@ const Dashboard = () => {
                   />
                 </figure>
 
-                {/* Content */}
                 <div className="card-body space-y-2">
                   <h2 className="card-title text-lg font-semibold">
                     {item.title}

@@ -45,7 +45,6 @@ const SearchPreview = () => {
         </button>
       </div>
 
-      {/* Search Results Dropdown */}
       {isOpen && searchTerm.length > 0 && (
         <div className="absolute top-full left-0 right-0 mt-2 bg-base-100 border border-base-300 rounded-lg shadow-lg z-50 max-h-80 overflow-y-auto">
           {filteredResults.length === 0 ? (
@@ -66,8 +65,7 @@ const SearchPreview = () => {
                   onClick={() => handleItemClick(item.id)}
                 >
                   <div className="flex gap-3">
-                    {/* Thumbnail */}
-                    <div className="flex-shrink-0">
+                    <div className="shrink-0">
                       <img
                         src={
                           item.imageBase64 || "https://via.placeholder.com/50"
@@ -77,7 +75,6 @@ const SearchPreview = () => {
                       />
                     </div>
 
-                    {/* Content */}
                     <div className="flex-1 min-w-0">
                       <p className="font-semibold truncate">{item.title}</p>
                       <p className="text-xs text-gray-500 truncate">

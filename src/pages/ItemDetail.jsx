@@ -10,6 +10,7 @@ const ItemDetail = () => {
   const [item, setItem] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showShareModal, setShowShareModal] = useState(false);
 
   useEffect(() => {
     const fetchItemDetail = async () => {
@@ -68,10 +69,64 @@ const ItemDetail = () => {
 
   const imgSrc = item.imageBase64 || "https://via.placeholder.com/600";
 
+  const shareUrl = `${window.location.origin}/item/${item.id}`;
+
+  const shareOptions = [
+    {
+      name: "Copy Link",
+      icon: "mdi:link-variant",
+      action: () => {
+        navigator.clipboard.writeText(shareUrl);
+        setShowShareModal(false);
+        alert("Link copied to clipboard!");
+      },
+    },
+    {
+      name: "WhatsApp",
+      icon: "mdi:whatsapp",
+      action: () => {
+        window.open(
+          `https://wa.me/?text=Check out this lost item: ${shareUrl}`,
+          "_blank",
+        );
+        setShowShareModal(false);
+      },
+    },
+    {
+      name: "X",
+      icon: "ri:twitter-x-fill",
+      action: () => {
+        window.open(
+          `https://twitter.com/intent/tweet?text=Found Item: ${item.title}&url=${shareUrl}`,
+          "_blank",
+        );
+        setShowShareModal(false);
+      },
+    },
+    {
+      name: "Facebook",
+      icon: "mdi:facebook",
+      action: () => {
+        window.open(
+          `https://www.facebook.com/sharer/sharer.php?u=${shareUrl}`,
+          "_blank",
+        );
+        setShowShareModal(false);
+      },
+    },
+    {
+      name: "Email",
+      icon: "mdi:email",
+      action: () => {
+        window.location.href = `mailto:?subject=Check out this lost item: ${item.title}&body=${shareUrl}`;
+        setShowShareModal(false);
+      },
+    },
+  ];
+
   return (
     <div className="min-h-screen bg-base-100 py-8">
       <div className="max-w-4xl mx-auto px-4">
-        {/* Back Button */}
         <button
           onClick={() => navigate("/dashboard")}
           className="btn btn-ghost btn-sm mb-6"
@@ -81,7 +136,6 @@ const ItemDetail = () => {
         </button>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* Image Section */}
           <div className="flex flex-col items-center">
             <figure className="w-full bg-yellow-300 rounded-lg overflow-hidden shadow-lg">
               <img
@@ -90,15 +144,9 @@ const ItemDetail = () => {
                 className="w-full h-96 object-cover"
               />
             </figure>
-            <div className="mt-4 text-sm text-gray-500">
-              {item.imageName && <p>📁 {item.imageName}</p>}
-              {item.imageType && <p>🖼️ {item.imageType}</p>}
-            </div>
           </div>
 
-          {/* Details Section */}
           <div className="space-y-6">
-            {/* Title */}
             <div>
               <h1 className="text-4xl font-bold mb-2">{item.title}</h1>
               <div className="badge badge-lg badge-primary">
@@ -106,7 +154,6 @@ const ItemDetail = () => {
               </div>
             </div>
 
-            {/* Location */}
             <div className="card bg-base-200">
               <div className="card-body">
                 <div className="flex items-start gap-3">
@@ -123,7 +170,6 @@ const ItemDetail = () => {
               </div>
             </div>
 
-            {/* Description */}
             {item.description && (
               <div className="card bg-base-200">
                 <div className="card-body">
@@ -136,7 +182,6 @@ const ItemDetail = () => {
               </div>
             )}
 
-            {/* Date */}
             <div className="card bg-base-200">
               <div className="card-body">
                 <div className="flex items-start gap-3">
@@ -159,19 +204,50 @@ const ItemDetail = () => {
               </div>
             </div>
 
-            {/* Action Buttons */}
             <div className="flex gap-4 pt-4">
-              <button className="btn btn-primary flex-1">
+              <button
+                className="btn btn-primary flex-1"
+                onClick={() => navigate("/message")}
+              >
                 <Icon icon="mdi:message" />
                 Contact Owner
               </button>
-              <button className="btn btn-outline flex-1">
+              <button
+                className="btn btn-outline flex-1"
+                onClick={() => setShowShareModal(true)}
+              >
                 <Icon icon="mdi:share-variant" />
                 Share
               </button>
             </div>
 
-            {/* Item ID (for reference) */}
+            {/* Share Modal */}
+            {showShareModal && (
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+                <div className="bg-base-100 rounded-lg p-6 w-96 max-w-full mx-4">
+                  <h3 className="text-xl font-bold mb-4">Share This Item</h3>
+                  <div className="grid grid-cols-2 gap-3">
+                    {shareOptions.map((option) => (
+                      <button
+                        key={option.name}
+                        onClick={option.action}
+                        className="btn btn-outline gap-2 flex items-center justify-center"
+                      >
+                        <Icon icon={option.icon} width="20" />
+                        <span className="text-sm">{option.name}</span>
+                      </button>
+                    ))}
+                  </div>
+                  <button
+                    className="btn btn-ghost w-full mt-4"
+                    onClick={() => setShowShareModal(false)}
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+            )}
+
             <div className="text-xs text-gray-400 text-center pt-4">
               Item ID: {item.id}
             </div>

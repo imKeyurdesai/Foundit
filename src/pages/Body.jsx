@@ -20,7 +20,7 @@ function Body() {
   }, []);
 
   if (loading) {
-    return <Icon icon="line-md:loading-loop" className="text-4xl mx-auto" />;
+    return <Icon icon="line-md:loading-loop" className="text-4xl mx-auto " />;
   }
 
   return (

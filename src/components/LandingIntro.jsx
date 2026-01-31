@@ -17,7 +17,6 @@ function LandingIntro() {
             ></img>
           </div>
 
-          {/* Importing pointers component */}
           <TemplatePointers />
         </div>
       </div>
