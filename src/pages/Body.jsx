@@ -1,27 +1,34 @@
-import React, { useState } from "react"
-import { Outlet } from "react-router-dom"
+import React, { useEffect, useState } from "react";
+import { Outlet, useNavigate } from "react-router-dom";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "../components/firebase";
+import Navber from "../components/Navber";
+import { Icon } from "@iconify/react";
 
 function Body() {
-  const [theme, setTheme] = useState("light")
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
 
-  const toggleTheme = () => {
-    const newTheme = theme === "light" ? "dark" : "light"
-    setTheme(newTheme)
-    document.documentElement.setAttribute("data-theme", newTheme)
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        navigate("/login", { replace: true });
+      }
+
+      setLoading(false);
+    });
+  }, []);
+
+  if (loading) {
+    return <Icon icon="line-md:loading-loop" className="text-4xl mx-auto" />;
   }
 
   return (
     <div>
-        <Navber/>
-      <input
-        type="checkbox"
-        className="toggle theme-controller"
-        checked={theme === "dark"}
-        onChange={toggleTheme}
-      />
+      <Navber />
       <Outlet />
     </div>
-  )
+  );
 }
 
-export default Body
+export default Body;
